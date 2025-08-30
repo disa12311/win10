@@ -60,4 +60,4 @@ This file now reflects the changes we made to the `docker-compose.yml` file, suc
 ---
 
 this url is home page:
-[![Open in dockur/windows]()](https://github.com/dockur/windows)
+[![Open in dockur/windows](https://avatars.githubusercontent.com/u/133648939?s=48&v=4)](https://github.com/dockur/windows)
