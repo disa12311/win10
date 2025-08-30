@@ -1,115 +1,74 @@
 services:
-windows:
-image: dockurr/windows:latest
-container_name: windows
-# keep your restart and grace period
-restart: always
-stop_grace_period: 2m
+  windows:
+    image: dockurr/windows
+    container_name: windows10
+    restart: unless-stopped
+    privileged: true
 
-# preserve network admin capability (tun) for VPN/bridge if needed
-cap_add:
-- NET_ADMIN
+    environment:
+      # --- General Config ---
+      VERSION: "win10"             # win11 / win10 / win7 / winxp / ...
+      RAM_SIZE: "4G"               # Dung lượng RAM VM
+      CPU_CORES: "2"               # Số core CPU
+      DISK_SIZE: "64G"             # Dung lượng ổ đĩa chính
+      DISK_TYPE: "qcow2"           # qcow2/raw
+      DISK_PATH: "/data/system.qcow2"
 
-# devices needed for KVM + tun; Added optional GPU passthrough below 
-devices: 
-- "/dev/kvm:/dev/kvm" 
-- "/dev/net/tun:/dev/net/tun" 
-# optional GPU (if you want passthrough) — uncomment and adjust on hosts that support it 
-# - "/dev/dri/card0:/dev/dri/card0" 
-# - "/dev/dri/renderD128:/dev/dri/renderD128" 
+      # --- Boot & ISO ---
+      BOOT: "cd"                   # disk / cd / ...
+      CDROM_URL: ""                # Link ISO gắn CD-ROM
+      FLOPPY_URL: ""               # Link floppy image
+      FLOPPY_DRIVE: ""             # Mount floppy
+      KERNEL: ""                   # Dùng kernel custom
+      INITRD: ""                   # Init RAM Disk
+      APPEND: ""                   # Kernel args
 
-ports: 
-- "8006:8006" # noVNC / web viewer (installation / console) 
-- "3389:3389/tcp" # RDP (TCP only) 
-# optional: expose spice / other ports if you add them 
-# - "5900:5900/tcp" 
+      # --- GPU / Hardware ---
+      GPU: "virtio"                # virtio / qxl / cirrus / none
+      SOUND: "true"                # true / false
+      USB: "true"                  # Bật USB device
+      ACCEL: "kvm"                 # kvm / tcg (no-accel)
 
-environment: 
-# Windows versions & configurations 
-VERSION: "10" #10, 11, win81, xp, server2019, ...
-EDITION: "pro" # pro/enterprise/education
-LANGUAGE: "en-US" # eg en-US, vi-VN, de-DE
-LOCALE: "en-US"
-EULA: "accept" # must accept eula if image requires
-# default user created in windows
-USERNAME: ${WINDOWS_USERNAME}
-PASSWORD: ${WINDOWS_PASSWORD}
+      # --- Network ---
+      NETWORK: "user"              # user / bridge / none
+      MAC_ADDRESS: ""              # Custom MAC
+      PORT_FORWARD: "3389:3389"    # Forward port
+      QEMU_NET_OPTS: ""
 
-# VM resources (depending on host)
-RAM_SIZE: "4.5G" # ex: "8G", "16G"
-CPU_CORES: "4" # ex: "2", "8"
-DISK_SIZE: "64G" # ex: "256G"
-VIRTIO_DRIVERS: "auto" # auto | custom path
+      # --- Credentials ---
+      USERNAME: ${WINDOWS_USERNAME}
+      PASSWORD: ${WINDOWS_PASSWORD}
 
-# network / time zone / extras
-TIMEZONE: "Asia/Bangkok"
-TZ: "Asia/Bangkok"
+      # --- Advanced ---
+      VNC: "true"                  # true = mở VNC server
+      VNC_PORT: "5900"
+      SPICE: "false"
+      RDP: "true"
+      RDP_PORT: "3389"
+      SSH: "false"
+      WEBSOCKIFY: "true"           # Web-based VNC proxy
+      WEBSOCKIFY_PORT: "6080"
 
-# share host -> Windows folder (you still have to mount the volume below)
-SHARED_FOLDERS: "/mnt/windows-data:/host" # optional mapping as host:guest
+      QEMU_DISPLAY: "gtk"          # gtk / sdl / none
+      EXTRA_ARGS: ""               # custom qemu args
 
-# update / debug
-AUTO_UPDATE: "true" # if image supports update script
-DEBUG: "false"
+      # --- Disks & Storage ---
+      DISK2_SIZE: ""               # Ổ phụ
+      DISK2_PATH: ""
+      DISK3_SIZE: ""
+      DISK3_PATH: ""
+      CDROM: ""                    # ISO cài đặt
+      DRIVE_OPTS: ""               # Tùy chỉnh drive
 
-# security / access
-RDP_PASSWORD: ${WINDOWS_PASSWORD} # if image uses this variable to set RDP pass
-# depending on image, additional variables may be needed: USER_UID / USER_GID, SYSTEM_USER, etc.
+      # --- Debug ---
+      DEBUG: "false"
+      LOG_LEVEL: "info"
 
-volumes:
-# where to store QCOW2/virtual disk: CRITICALLY persist VM state here
+    ports:
+      - "8006:8006"   # noVNC web
+      - "3389:3389"   # RDP
+      - "5900:5900"   # VNC
+      - "6080:6080"   # Websockify
 
-- /tmp/docker-data:/mnt/disco1 # path of your choice (host bind)
-
-- windows-data:/mnt/windows-data # named volume to backup/move
-
-- ./win-iso-cache:/iso-cache # (optional) cache ISO to avoid reloading
-
-- ./virtio-drivers:/virtio # (optional) if you want to mount virtio drivers
-# mount docker socket if you want to let the container initialize nested containers (be careful)
-
-# - /var/run/docker.sock:/var/run/docker.sock:ro
-
-# resources and limits to avoid taking over the entire host
-deploy:
-resources:
-limits:
-memory: 12G
-cpus: '2.0'
-
-# ulimits for QEMU to run stably
-ulimits:
-nofile: 65536
-
-# logging: rotate logs to avoid disk overflow
-logging:
-driver: "json-file"
-options:
-max-size: "50m"
-max-file: "5"
-
-# healthcheck: try accessing web console (requires container with curl)
-healthcheck:
-test: ["CMD-SHELL", "curl -fsS http://localhost:8006/ || exit 1"]
-interval: 30s
-timeout: 10s
-retries: 5
-start_period: 60s
-
-# ==============================================================================================================================
-# security notes: run as privileged only if you understand the risks; KVM usually needs devices + cap_add (no privileged needed)
-# privileged: false
-# optional: use host network if you want RDP to listen directly (caution)
-# network_mode: "bridge"
-# optional entrypoint/command overrides (usually not needed)
-# command: ["--some-flag"]
-# ===============================================================================================================================
-
-# labels: metadata, monitoring
-labels:
-- "org.opencontainers.image.title=dockurr-windows"
-- "com.example.project=windows-lab"
-
-volumes:
-windows-data:
-driver: local
+    volumes:
+      - ./data:/data
