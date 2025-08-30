@@ -60,4 +60,4 @@ This file now reflects the changes we made to the `docker-compose.yml` file, suc
 ---
 
 this url is home page:
-[![Open in dockur/windows]((https://raw.githubusercontent.com/disa12311/discord-hybrid-music-bot/refs/heads/main/ChatGPT%20Image%2020_09_23%2030%20thg%208%2C%202025(1).png)](https://github.com/dockur/windows)
+[![Open in dockur/windows]((https://raw.githubusercontent.com/disa12311/discord-hybrid-music-bot/refs/heads/main/ChatGPT%20Image%2020_09_23%2030%20thg%208%2C%202025(1).png )](https://github.com/dockur/windows)
