@@ -43,6 +43,14 @@ docker info
 
 ---
 
+### Starting the Container
+
+1. **Start the container** by running the following command:
+
+```bash
+docker-compose -f windows10.yml up
+```
+
 2. **Start the container** with:
 
 ```bash
@@ -56,8 +64,3 @@ That's it! With these steps, you've successfully configured Docker and created t
 ---
 
 This file now reflects the changes we made to the `docker-compose.yml` file, such as managing credentials through the `.env` file and removing unnecessary ports and configurations. Also, remember to keep your sensitive environment variables safe and out of version control.
-
----
-
-this url is home page:
-[![Open in dockur/windows]((https://raw.githubusercontent.com/disa12311/discord-hybrid-music-bot/refs/heads/main/ChatGPT%20Image%2020_09_23%2030%20thg%208%2C%202025(1).png )](https://github.com/dockur/windows)
