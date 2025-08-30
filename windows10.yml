@@ -96,17 +96,14 @@ timeout: 10s
 retries: 5
 start_period: 60s
 
+# ==============================================================================================================================
 # security notes: run as privileged only if you understand the risks; KVM usually needs devices + cap_add (no privileged needed)
-
 # privileged: false
-
 # optional: use host network if you want RDP to listen directly (caution)
-
 # network_mode: "bridge"
-
 # optional entrypoint/command overrides (usually not needed)
-
 # command: ["--some-flag"]
+# ===============================================================================================================================
 
 # labels: metadata, monitoring
 labels:
