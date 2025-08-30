@@ -70,7 +70,7 @@ services:
       resources:
         limits:
           memory: 12G
-          cpus: '6.0'
+          cpus: '2.0'
 
     # ulimits để QEMU chạy ổn định
     ulimits:
