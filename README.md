@@ -1,3 +1,8 @@
+--------------------------------------------------------
+ Windows for Docker v4.35...
+ For support visit https://github.com/dockur/windows
+--------------------------------------------------------
+
 ### Instructions for setting up Docker in **Codespace**
 
 1. **Check available storage**
@@ -64,8 +69,3 @@ That's it! With these steps, you've successfully configured Docker and created t
 ---
 
 This file now reflects the changes we made to the `docker-compose.yml` file, such as managing credentials through the `.env` file and removing unnecessary ports and configurations. Also, remember to keep your sensitive environment variables safe and out of version control.
-
---------------------------------------------------------
- Windows for Docker v4.35...
- For support visit https://github.com/dockur/windows
---------------------------------------------------------
