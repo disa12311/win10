@@ -1,0 +1,40 @@
+services:
+  windows:
+    image: dockurr/windows
+    container_name: windows10
+    restart: unless-stopped
+    privileged: true
+
+    environment:
+      # core config
+      VERSION: "10"
+      RAM_SIZE: "4G"
+      CPU_CORES: "2"
+      DISK_SIZE: "64G"
+      DISK_TYPE: "qcow2"
+      DISK_PATH: "/data/system.qcow2"
+
+      # boot / hardware / network
+      BOOT: "cd"
+      GPU: "virtio"
+      ACCEL: "kvm"
+      NETWORK: "user"
+      PORT_FORWARD: "8006:8006"
+
+      # credentials (từ .env hoặc environment của host)
+      USERNAME: ${WINDOWS_USERNAME}
+      PASSWORD: ${WINDOWS_PASSWORD}
+
+      # remote access (noVNC via websockify)
+      VNC: "true"
+      VNC_PORT: "5900"
+      RDP: "true"
+      RDP_PORT: "3389"
+      WEBSOCKIFY: "true"
+      WEBSOCKIFY_PORT: "6080"
+
+    ports:
+      - "8006:8006"   # noVNC web (websockify)
+
+    volumes:
+      - ./data:/data
