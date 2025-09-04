@@ -48,7 +48,7 @@ docker info
 1. **Start the container** by running the following command:
 
 ```bash
-docker-compose -f windows10.yml up
+docker-compose -f docker-compose.yml up
 ```
 
 2. **Start the container** with:
