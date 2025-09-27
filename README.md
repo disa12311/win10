@@ -5,49 +5,6 @@
 
 ### Instructions for setting up Docker in **Codespace**
 
-1. **Check available storage**
-In the terminal, run the following command to view the partitions and available storage:
-
-```bash
-df -h
-```
-
-Choose the partition with the largest storage capacity.
-
-2. **Create the Docker folder**
-Run the following command to create the folder where Docker will store the data:
-
-```bash
-sudo mkdir -p /tmp/docker-data
-```
-
-3. **Configure Docker**
-Now, edit the Docker configuration file:
-
-```bash
-sudo nano /etc/docker/daemon.json
-```
-
-Paste the following content:
-
-```json
-{
-"data-root": "/tmp/docker-data"
-}
-```
-
-4. **Restart your Codespace**
-Power cycle your Codespace to apply the changes.
-
-5. **Verify the configuration**
-To ensure Docker is configured correctly, run:
-
-```bash
-docker info
-```
-
----
-
 ### Starting the Container
 
 1. **Start the container** by running the following command:
